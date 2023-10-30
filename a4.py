@@ -10,8 +10,35 @@ class TTTBoard:
             represent moves by player 'O' and '*'s are spots no one has yet played on
     """
 
-    pass
+    def __init__(self):
+        self.board =['*']*9
+    def __str__(self) -> str:
+        s= ""
+        for x in [0,3,6]:
+            s+=self.board[x+0]+ " " + self.board[x+1]+" "+ self.board[x+2]+"\n"
+        return s
+    def make_move(self,player,pos) -> bool:
+        if pos< 0 or pos > 8 or self.board[pos]!= '*':
+            return False
+        self.board[pos] = player
+        return True
+    def has_won(self, player) -> bool:
+        
+        winning_combinations = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], 
+            [0, 3, 6], [1, 4, 7], [2, 5, 8],  
+            [0, 4, 8], [2, 4, 6]            
+        ]
+        for combination in winning_combinations:
+            if all([self.board[pos] == player for pos in combination]):
+                return True
+        return False
 
+    def game_over(self) -> bool:
+        return self.has_won("X") or self.has_won("O") or all(cell != '*' for cell in self.board)
+    
+    def clear(self):
+        self.board = ['*']*9
 
 def play_tic_tac_toe() -> None:
     """Uses your class to play TicTacToe"""
@@ -62,8 +89,12 @@ if __name__ == "__main__":
     # properly.
     brd = TTTBoard()
     brd.make_move("X", 8)
+    print(brd.board)
+    print(brd)
     brd.make_move("O", 7)
-
+    print(brd)
+    brd.make_move("x",1)
+    print(brd)
     assert brd.game_over() == False
 
     brd.make_move("X", 5)
@@ -72,6 +103,7 @@ if __name__ == "__main__":
 
     assert brd.has_won("X") == True
     assert brd.has_won("O") == False
+
     assert brd.game_over() == True
 
     brd.clear()
@@ -89,4 +121,5 @@ if __name__ == "__main__":
     print("All tests passed!")
 
     # uncomment to play!
-    # play_tic_tac_toe()
+    play_tic_tac_toe()
+
